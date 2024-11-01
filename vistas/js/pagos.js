@@ -1,13 +1,45 @@
-$(".tablas").on("click", ".btnpagarventa", function(){
+$(".tablas").on("click", ".btnpagarventa", function () {
+    var idVenta = $(this).attr("idVenta");
 
+    $("#idventapago").val(idVenta);
 
-	var idVenta = $(this).attr("idVenta");
+    var datos = new FormData();
+    datos.append("idVenta", idVenta);
 
-	$("#idventapago").val(idVenta);
+    $.ajax({
+        url: "ajax/pagos.ajax.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (respuesta) {
+            $("#totalPagado").val(respuesta.total_pagado);
+
+            console.log(respuesta.monto_restante);
+            if (respuesta.monto_restante > 0) {
+                $("#montoPago").prop('disabled', false);
+                $("#btnConfirmarCambio").prop('disabled', false);
+                $("#montoPago").attr({
+                    "max": respuesta.monto_restante,
+                });
+            } else {
+                $("#montoPago").prop('disabled', true);
+                $("#btnConfirmarCambio").prop('disabled', true);
+            }
+            
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error en la solicitud AJAX: ", textStatus, errorThrown);
+            console.error("Respuesta del servidor: ", jqXHR.responseText);
+        }
+    });
+
 
 })
 
-$(".tablas").on("click", ".btnsumatoria", function(){
+$(".tablas").on("click", ".btnsumatoria", function () {
 
     var idVenta = $(this).attr("idVenta");
 
@@ -20,7 +52,7 @@ $(".tablas").on("click", ".btnsumatoria", function(){
         method: "POST",
         data: { idVenta: idVenta }, // Enviar el idVenta al servidor
         dataType: "json",
-        success: function(respuesta) {
+        success: function (respuesta) {
             if (respuesta && respuesta.total_pagado !== null) {
                 // Colocar la sumatoria del total pagado en el campo del modal
                 $("#totalPagado").val(respuesta.total_pagado);
@@ -28,7 +60,7 @@ $(".tablas").on("click", ".btnsumatoria", function(){
                 $("#totalPagado").val("0"); // Si no hay pagos, mostrar 0
             }
         },
-        error: function() {
+        error: function () {
             $("#totalPagado").val("Error al obtener el total pagado");
         }
     });
@@ -40,7 +72,7 @@ $(".tablas").on("click", ".btnsumatoria", function(){
 ELIMINAR CLIENTE
 =============================================*/
 // Suponiendo que tienes jQuery incluido en tu proyecto
-$(".tablas").on("click", ".btnEliminarPago", function() {
+$(".tablas").on("click", ".btnEliminarPago", function () {
     var id_pago = $(this).attr("id_pago");
 
     swal({
@@ -52,7 +84,7 @@ $(".tablas").on("click", ".btnEliminarPago", function() {
         cancelButtonColor: '#d33',
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Si, borrar pago!'
-      }).then(function(result){
+    }).then(function (result) {
         if (result.value) {
             window.location = "index.php?ruta=pagos&id_pago=" + id_pago;
         }

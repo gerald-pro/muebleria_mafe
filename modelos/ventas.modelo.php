@@ -59,6 +59,35 @@ class ModeloVentas{
 
 	}
 
+
+	static public function mdlMostrarDetalleVenta($id_venta) {
+
+		$stmt = Conexion::conectar()->prepare("
+		SELECT 
+			v.id, 
+			v.fecha, 
+			v.total, 
+			v.tipo, 
+			v.estado, 
+			SUM(p.pago) AS saldo
+	
+		FROM ventas v 
+		LEFT JOIN pagos p ON v.id = p.id_venta 
+		WHERE v.id = :id_venta
+		GROUP BY v.id, v.fecha, v.total, v.tipo, v.estado;
+		");
+
+		$stmt->bindParam(":id_venta", $id_venta, PDO::PARAM_INT);
+
+		$stmt->execute();
+
+		return $stmt->fetchAll();
+
+		$stmt->close();
+
+		$stmt = null;
+}
+
 	static public function mdlMostrarDetallePago(){
 
 
@@ -158,6 +187,27 @@ class ModeloVentas{
 		$stmt->close();
 		$stmt = null;
 
+	}
+
+
+	static public function mdlActualizarEstadoVenta($idVenta, $nuevoEstado) {
+		$stmt = Conexion::conectar()->prepare("
+			UPDATE ventas 
+			SET estado = :estado 
+			WHERE id = :id_venta
+		");
+	
+		$stmt->bindParam(":estado", $nuevoEstado, PDO::PARAM_INT);
+		$stmt->bindParam(":id_venta", $idVenta, PDO::PARAM_INT);
+	
+		if ($stmt->execute()) {
+			return "ok";
+		} else {
+			return "error";
+		}
+	
+		$stmt->close();
+		$stmt = null;
 	}
 
 	/*=============================================

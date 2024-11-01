@@ -121,10 +121,10 @@ if ($xml) {
                                   </button>';
 
                             // Verificación para mostrar el botón del modal solo si el método de pago es "A Crédito"
-                            
+                            //if ($tipovp != 'Venta' && $estado != 2) {
                                 echo '<button class="btn btn-success btnpagarventa" data-toggle="modal" data-target="#modalConfirmarpago1" idVenta="' . $value["id"] . '"><i class="fa fa-dollar"></i></button>';
                             
-
+                            //}
 
                             if ($_SESSION["perfil"] == "Administrador") {
                                 echo '<button class="btn btn-warning btnEditarVenta" idVenta="' . $value["id"] . '"><i class="fa fa-pencil"></i></button>
@@ -191,7 +191,14 @@ if ($xml) {
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                                <input type="text" class="form-control input-lg" name="montoPago" id="montoPago" placeholder="Ingresar monto" required>
+                                <input type="number" min="1" class="form-control input-lg" name="montoPago" id="montoPago" placeholder="Ingresar monto" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Total pagado</span>
+                                <input type="text" class="form-control input-lg" name="totalPagado" id="totalPagado" readonly>
                             </div>
                         </div>
                     </div>

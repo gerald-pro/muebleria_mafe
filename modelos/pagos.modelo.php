@@ -9,18 +9,16 @@ class ModeloPagos {
     =============================================*/
 
     static public function mdlIngresarPagos($tabla, $datos) {
-        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_venta, fecha_pago, pago) VALUES (:id_venta, :fecha_pago, :pago)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_venta, fecha_pago, pago, total_pagado) VALUES (:id_venta, :fecha_pago, :pago, 0)");
 
         $stmt->bindParam(":id_venta", $datos["id_venta"], PDO::PARAM_INT);    
         $stmt->bindParam(":fecha_pago", $datos["fecha_pago"], PDO::PARAM_STR);
         $stmt->bindParam(":pago", $datos["pago"], PDO::PARAM_INT);
 
-
-
         if ($stmt->execute()) {
             return "ok";
         } else {
-            return "error";
+            return $stmt->errorInfo()[2];
         }
 
         $stmt->close();
@@ -52,9 +50,9 @@ class ModeloPagos {
     =============================================*/
     static public function mdlObtenerTotalPagadoPorVenta($idVenta) {
         $stmt = Conexion::conectar()->prepare("
-            SELECT v.id, v.total, SUM(p.pago) AS total_pagado
+            SELECT v.id, v.total, COALESCE(SUM(p.pago), 0) AS total_pagado, (v.total - COALESCE(SUM(p.pago), 0)) AS monto_restante
             FROM ventas v
-            JOIN pagos p ON v.id = p.id_venta
+            LEFT JOIN pagos p ON v.id = p.id_venta
             WHERE v.id = :id_venta
             GROUP BY v.id, v.total
         ");
@@ -63,6 +61,33 @@ class ModeloPagos {
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    static public function ctrMostrarDetallePagoPorVenta($id_venta){
+
+		$stmt = Conexion::conectar()->prepare("
+		SELECT 
+			v.id AS id_venta, 
+			p.id_pago AS id_pago, 
+			v.total AS total_venta, 
+			p.pago AS monto_pago, 
+			p.fecha_pago AS fecha_pago
+		
+		FROM ventas v
+		INNER JOIN pagos p ON v.id = p.id_venta
+		WHERE v.id = :id_venta;
+		");
+
+		$stmt->bindParam(":id_venta", $id_venta, PDO::PARAM_INT);
+
+		$stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$stmt->close();
+
+		$stmt = null;
+
+	}
 
     /*=============================================
 	ELIMINAR CLIENTE

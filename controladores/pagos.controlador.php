@@ -23,6 +23,12 @@ class ControladorPagos {
                 $respuesta = ModeloPagos::mdlIngresarPagos($tabla, $datos);
 
                 if ($respuesta == "ok") {
+                    $detalleVenta = ModeloPagos::mdlObtenerTotalPagadoPorVenta($_POST["idventapago"]);
+
+                    if ($detalleVenta && $detalleVenta["monto_restante"] == 0) {
+                        ModeloVentas::mdlActualizarEstadoVenta($_POST["idventapago"], 2);
+                    }
+
                     echo '<script>
                         swal({
                             type: "success",
@@ -33,6 +39,17 @@ class ControladorPagos {
                             if (result.value) {
                                 window.location = "pagos"; // Redirige a la página de pagos
                             }
+                        });
+                    </script>';
+                } else {
+                    echo '<script>
+                        swal({
+                            type: "error",
+                            title: "' . $respuesta . '",
+                            showConfirmButton: true,
+                            confirmButtonText: "Cerrar"
+                        }).then(function(result) {
+                            
                         });
                     </script>';
                 }
@@ -69,6 +86,12 @@ class ControladorPagos {
     static public function ctrObtenerTotalPagadoPorVenta($idVenta) {
         return ModeloPagos::mdlObtenerTotalPagadoPorVenta($idVenta);
     }
+
+	static public function ctrMostrarDetallePagoPorVenta($id_venta){
+		$respuesta = ModeloPagos::ctrMostrarDetallePagoPorVenta($id_venta);
+		return $respuesta;
+	
+	}
 
     /*=============================================
 	ELIMINAR CLIENTE

@@ -195,6 +195,7 @@ CUERPO DOCUMENTO
 <script src="vistas/js/ventas.js"></script>
 <script src="vistas/js/reportes.js"></script>
 <script src="vistas/js/pagos.js"></script>
+<script src="vistas/js/ventaspagos.js"></script>
 
 </body>
 </html>

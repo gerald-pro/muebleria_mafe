@@ -66,7 +66,7 @@
                                 <td><button class="btn ' . $estadoClase . '">' . $estado . '</button></td>
                                 <td>Bs ' . number_format($value["saldo"]) . '</td>
                                 <td>
-                                    <button class="btn btn-info btnVerVenta" data-toggle="modal" data-target="#modalVerVenta" data-idventa="' . $value["id"] . '">
+                                    <button class="btn btn-info btnVerPago" id="' . $value["id"] . '" data-toggle="modal" data-target="#modalVerVenta">
                                         <i class="fa fa-eye"></i> Ver
                                     </button>
                                 </td>
