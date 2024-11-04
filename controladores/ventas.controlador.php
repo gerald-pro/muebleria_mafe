@@ -21,6 +21,11 @@ class ControladorVentas{
 
 	}
 
+	static public function buscarPorId($idVenta) {
+        $respuesta = ModeloVentas::buscarPorId($idVenta);
+        return $respuesta;
+    }
+
 	/*=============================================
 	CREAR VENTA
 	=============================================*/
