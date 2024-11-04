@@ -59,6 +59,21 @@ class ModeloVentas{
 
 	}
 
+	static public function buscarPorId($id_venta) {
+		$stmt = Conexion::conectar()->prepare("
+		SELECT v.id, v.fecha, v.total, v.tipo, v.estado, u.nombre as vendedor, c.nombre as cliente
+		FROM ventas v
+		JOIN usuarios u ON u.id = v.id_vendedor
+		JOIN clientes c ON c.id = v.id_cliente
+		WHERE v.id = :id_venta
+		");
+
+		$stmt->bindParam(":id_venta", $id_venta, PDO::PARAM_INT);
+		$stmt->execute();
+		return $stmt->fetch();
+}
+
+
 
 	static public function mdlMostrarDetalleVenta($id_venta) {
 
@@ -190,14 +205,13 @@ class ModeloVentas{
 	}
 
 
-	static public function mdlActualizarEstadoVenta($idVenta, $nuevoEstado) {
+	static public function mdlActualizarEstadoPagadoVenta($idVenta) {
 		$stmt = Conexion::conectar()->prepare("
 			UPDATE ventas 
-			SET estado = :estado 
+			SET pagado = 1 
 			WHERE id = :id_venta
 		");
 	
-		$stmt->bindParam(":estado", $nuevoEstado, PDO::PARAM_INT);
 		$stmt->bindParam(":id_venta", $idVenta, PDO::PARAM_INT);
 	
 		if ($stmt->execute()) {

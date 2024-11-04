@@ -26,7 +26,7 @@ class ControladorPagos {
                     $detalleVenta = ModeloPagos::mdlObtenerTotalPagadoPorVenta($_POST["idventapago"]);
 
                     if ($detalleVenta && $detalleVenta["monto_restante"] == 0) {
-                        ModeloVentas::mdlActualizarEstadoVenta($_POST["idventapago"], 2);
+                        ModeloVentas::mdlActualizarEstadoPagadoVenta($_POST["idventapago"]);
                     }
 
                     echo '<script>

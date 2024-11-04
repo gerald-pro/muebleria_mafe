@@ -195,7 +195,8 @@ CREATE TABLE `ventas` (
   `metodo_pago` text NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `tipo` text NOT NULL,
-  `estado` int(11) DEFAULT NULL
+  `estado` int(11) DEFAULT NULL,
+  `pagado` BOOLEAN NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --

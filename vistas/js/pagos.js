@@ -16,8 +16,12 @@ $(".tablas").on("click", ".btnpagarventa", function () {
         dataType: "json",
         success: function (respuesta) {
             $("#totalPagado").val(respuesta.total_pagado);
+            $("#totalVenta").val(respuesta.total);
+            $("#cliente").val(respuesta.cliente);
+            $("#vendedor").val(respuesta.vendedor);
+            $("#saldoPendiente").val(respuesta.monto_restante);
 
-            console.log(respuesta.monto_restante);
+            console.log(respuesta);
             if (respuesta.monto_restante > 0) {
                 $("#montoPago").prop('disabled', false);
                 $("#btnConfirmarCambio").prop('disabled', false);
