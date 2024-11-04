@@ -118,7 +118,7 @@ if ($xml) {
                                 }
                             }
 
-                            if ($pagado == 0) {
+                            if ($montos['monto_restante'] > 0) {
                                 echo '<td><button class="btn btn-danger btn-xs">No</button></td>';
                             } else {
                                 echo '<td><button class="btn btn-success btn-xs">Si</button></td>';
@@ -212,6 +212,13 @@ if ($xml) {
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="">Saldo</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                <input type="number" class="form-control input-md" name="totalPagado" id="totalPagado" readonly>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="">Saldo pendiente</label>
